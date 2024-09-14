@@ -90,6 +90,10 @@ class ContactoController extends Controller
      */
     public function destroy(Contacto $contacto)
     {
-        
+        $contacto->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Contacto eliminado satisfactoriamente'
+        ], 200);
     }
 }
