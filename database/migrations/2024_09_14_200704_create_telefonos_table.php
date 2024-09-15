@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('telefonos', function (Blueprint $table) {
             $table->id();
             $table->string('telefono', 15);
-            $table->foreignId('contacto_id')->constrained('contactos')
-            ->onUpdate('cascade')->onDelete('restrict');
+            $table->unsignedBigInteger('contacto_id');
+            $table->foreign('contacto_id')
+                ->references('id')->on('contactos')
+                ->onDelete('cascade');
+            
             $table->timestamps();
         });
     }
