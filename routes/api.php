@@ -13,3 +13,4 @@ Route::resource('contactos', ContactoController::class);
 Route::post('buscar-direccion', [ContactoController::class, 'searchForDireccion']);
 Route::post('buscar-correo', [ContactoController::class, 'searchForCorreo']);
 Route::post('buscar-telefono', [ContactoController::class, 'searchForTelefono']);
+Route::post('buscar-general', [ContactoController::class, 'searchGeneral']);

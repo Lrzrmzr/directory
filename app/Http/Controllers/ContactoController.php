@@ -262,6 +262,42 @@ class ContactoController extends Controller
             'data' => $contactos
         ], 200);
     }
+
+    public function searchGeneral(Request $request)
+    {
+        $request->validate([
+            'search' => 'required|string|min:1'
+        ]);
+
+        $searchTerm = $request->input('search');
+
+        if (!$searchTerm) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Debe proporcionar un término de búsqueda'
+            ], 400);
+        }
+
+        $contactos = Contacto::where('name', 'LIKE', "%{$searchTerm}%")
+            ->orWhere('ap_first', 'LIKE', "%{$searchTerm}%")
+            ->orWhere('ap_last', 'LIKE', "%{$searchTerm}%")
+            ->orWhereHas('correos', function ($query) use ($searchTerm) {
+                $query->where('correo', 'LIKE', "%{$searchTerm}%");
+            })
+            ->orWhereHas('direcciones', function ($query) use ($searchTerm) {
+                $query->where('direccion', 'LIKE', "%{$searchTerm}%");
+            })
+            ->orWhereHas('telefonos', function ($query) use ($searchTerm) {
+                $query->where('telefono', 'LIKE', "%{$searchTerm}%");
+            })
+            ->with(['correos', 'direcciones', 'telefonos']) 
+            ->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => $contactos
+        ], 200);
+    }
 }
 
 
