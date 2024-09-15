@@ -266,10 +266,10 @@ class ContactoController extends Controller
     public function searchGeneral(Request $request)
     {
         $request->validate([
-            'search' => 'required|string|min:1'
+            'search-any' => 'required|string|min:1'
         ]);
 
-        $searchTerm = $request->input('search');
+        $searchTerm = $request->input('search-any');
 
         if (!$searchTerm) {
             return response()->json([
