@@ -9,4 +9,8 @@ class Direcciones extends Model
 {
     use HasFactory;
     protected $fillable = ['direccion', 'contacto_id'];
+
+    public function contacto(){
+        return $this->belongsTo(Contacto::class);
+    }
 }
