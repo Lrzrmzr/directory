@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contacto;
+use App\Models\Direcciones;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -153,16 +154,10 @@ class ContactoController extends Controller
             }
         }
 
-
         return response()->json([
             'status' => true,
             'message' => 'Contacto actualizado satisfactoriamente'
         ], 200);
-
-
-
-
-
     }
 
     /**
@@ -176,4 +171,97 @@ class ContactoController extends Controller
             'message' => 'Contacto eliminado satisfactoriamente'
         ], 200);
     }
+
+    /**
+     * Busca coincidencias del la tabla direccion
+     */
+    public function searchForDireccion(Request $request){
+
+        $request->validate([
+            'direccion' => 'required|string|min:1'
+        ]);
+        
+        $direccionInput  = $request->input('direccion');
+        
+        $contactos = Contacto::whereHas('direcciones', function ($query) use ($direccionInput) {
+            $query->where('direccion', 'like', '%' . $direccionInput . '%');
+        })
+        ->with(['correos', 'direcciones', 'telefonos'])
+        ->get();
+
+        if($contactos->isEmpty()){
+            return response()->json([
+                'status' => false,
+                'message' => 'No se encontraron direcciones con el dato proporcionado'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $contactos
+        ], 200);
+    }
+
+    /**
+     * Busca coincidencias con la tabla Correo
+     */
+    public function searchForCorreo(Request $request){
+
+        $request->validate([
+            'correo' => 'required|string|min:5'
+        ]);
+        
+        $correoInput  = $request->input('correo');
+        
+        $contactos = Contacto::whereHas('correos', function ($query) use ($correoInput) {
+            $query->where('correo', 'like', '%' . $correoInput . '%');
+        })
+        ->with(['correos', 'direcciones', 'telefonos'])
+        ->get();
+
+        if($contactos->isEmpty()){
+            return response()->json([
+                'status' => false,
+                'message' => 'No se encontraron correos con el dato proporcionado'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $contactos
+        ], 200);
+    }
+
+
+    /**
+     * Busca coincidencias con la tabla Telefono
+     */
+    public function searchForTelefono(Request $request){
+
+        $request->validate([
+            'telefono' => 'required|string|min:7'
+        ]);
+        
+        $telefonoInput  = $request->input('telefono');
+        
+        $contactos = Contacto::whereHas('telefonos', function ($query) use ($telefonoInput) {
+            $query->where('telefono', 'like', '%' . $telefonoInput . '%');
+        })
+        ->with(['correos', 'direcciones', 'telefonos'])
+        ->get();
+
+        if($contactos->isEmpty()){
+            return response()->json([
+                'status' => false,
+                'message' => 'No se encontraron telefonos con el dato proporcionado'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $contactos
+        ], 200);
+    }
 }
+
+
