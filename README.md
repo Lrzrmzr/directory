@@ -64,3 +64,41 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Instrucciones
+
+- Clonar repositorio
+- Configurar archivo .env con conexión a base de datos MySql
+- Correr migraciones con seeders
+- 
+php artisan migrate --seed
+
+Los seeeders generarán 5000 registros de contactos, con sus relaciones a otras tablas, así como miles de registros con datos vinculados a la tabla principal de contactos 
+
+al ejecutar php artisan serve , nos dara la siguiente ruta por defecto 
+
+http://localhost:8000
+
+Para la consulta de nuestros endpoints se utilizara esta ruta o la designada por php artisan, quedando de esta manera nuestras rutas
+
+Lista de Contactos: Nos mostrara los contactos anidados con los datos vinculados con las tablas: telefonos, correos y direcciones 
+http://localhost:8000/api/contactos      GET
+
+Al enviar un id de algun contacto nos mostrara los datos del contacto
+http://localhost:8000/api/contactos/{id_contacto}      GET
+
+Editar los elementos de uno o varios Contactos, los endpoins se configuraron para determinar si la edicion o adicion de algún contacto pueda o no contener datos relacionados a las demás tablas
+http://localhost:8000/api/contactos/{id_contacto}     PUT/ PATCH
+
+Elimina el registro determinado, y debido a la configuración de nuestra base, al eliminar un contacto se eliminarán los registros relacionados en las otras tablas
+http://localhost:8000/api/contactos/{id_contacto}        DELETE
+
+BUSQUEDAS POR TABLAS Y GENERAL
+
+http://localhost:8000/api/contactos/buscar-direccion
+
+http://localhost:8000/api/contactos/buscar-correo
+
+http://localhost:8000/api/contactos/buscar-telefono
+
+http://localhost:8000/api/contactos/buscar-general
